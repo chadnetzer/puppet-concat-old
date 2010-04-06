@@ -109,8 +109,8 @@ else
 	echo '# This file is managed by Puppet. DO NOT EDIT.' > "fragments.concat"
 fi
 
-# find all the files in the fragments directory, sort them numerically and
-# concat to fragments.concat in the working dir
+# find all the files in the fragments directory, sort them lexicographically
+# (or optionally numerically) and concat to fragments.concat in the working dir
 find fragments/ -type f -follow -print0 | sort -z ${SORTARG} | xargs -0 cat >>"fragments.concat"
 
 if [ x${TEST} = "x" ]; then
