@@ -39,6 +39,8 @@
 # The script does error checking on the various dirs and files to make
 # sure things don't fail.
 
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+
 OUTFILE=""
 WORKDIR=""
 TEST=""
