@@ -9,7 +9,7 @@
 # $puppetversion should be either 24 or 25 to enable a 24 compatible
 # mode, in 24 mode you might see phantom notifies this is a side effect
 # of the method we use to clear the fragments directory.
-# 
+#
 # The regular expression below will try to figure out your puppet version
 # but this code will only work in 0.24.8 and newer.
 #
@@ -18,7 +18,7 @@ class concat::setup {
     $concatdir = "${module_dir_path}/concat"
     $majorversion = regsubst($puppetversion, '^[0-9]+[.]([0-9]+)[.][0-9]+$', '\1')
 
-    file{"/usr/local/bin/concatfragments.sh": 
+    file{"/usr/local/bin/concatfragments.sh":
             owner  => root,
             group  => root,
             mode   => 755,
