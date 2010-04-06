@@ -13,13 +13,10 @@
 # The regular expression below will try to figure out your puppet version
 # but this code will only work in 0.24.8 and newer.
 #
-# $sort keeps the path to the unix sort utility
-#
 # It also copies out the concatfragments.sh file to /usr/local/bin
 class concat::setup {
     $concatdir = "${module_dir_path}/concat"
     $majorversion = regsubst($puppetversion, '^[0-9]+[.]([0-9]+)[.][0-9]+$', '\1')
-    $sort = "sort"
 
     file{"/usr/local/bin/concatfragments.sh": 
             owner  => root,

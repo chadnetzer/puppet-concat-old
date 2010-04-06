@@ -31,8 +31,6 @@
 # If you are on version 0.24.8 or newer you can set $puppetversion to 24 in 
 # concat::setup to enable a compatible mode, else just leave it on 25
 #
-# If your sort utility is not in /bin/sort please set $sort in concat::setup
-# 
 # Before you can use any of the concat features you should include the 
 # class concat::setup somewhere on your node first.
 #
@@ -84,7 +82,6 @@ define concat($mode = 0644, $owner = "root", $group = "root", $warn = "false", $
     $safe_name = regsubst($name, '/', '_', 'G')
     $concatdir = $concat::setup::concatdir
     $version   = $concat::setup::majorversion
-    $sort      = $concat::setup::sort
     $fragdir   = "${concatdir}/${safe_name}"
     $concat_name = "fragments.concat.out"
 
@@ -134,7 +131,7 @@ define concat($mode = 0644, $owner = "root", $group = "root", $warn = "false", $
         subscribe => File[$fragdir],
         alias     => "concat_${fragdir}",
         require   => [ File["/usr/local/bin/concatfragments.sh"], File[$fragdir], File["${fragdir}/fragments"], File["${fragdir}/fragments.concat"] ],
-        unless    => "/usr/local/bin/concatfragments.sh -o ${fragdir}/${concat_name} -d ${fragdir} -t -s ${sort} ${warnflag} ${forceflag}",
-        command   => "/usr/local/bin/concatfragments.sh -o ${fragdir}/${concat_name} -d ${fragdir} -s ${sort} ${warnflag} ${forceflag}",
+        unless    => "/usr/local/bin/concatfragments.sh -o ${fragdir}/${concat_name} -d ${fragdir} -t ${warnflag} ${forceflag}",
+        command   => "/usr/local/bin/concatfragments.sh -o ${fragdir}/${concat_name} -d ${fragdir} ${warnflag} ${forceflag}",
     }
 }
