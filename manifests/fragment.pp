@@ -17,10 +17,17 @@ define concat::fragment($target, $content='', $source='', $order=10, $ensure = "
     $fragdir = "${concatdir}/${safe_target_name}"
 
     # if content is passed, use that, else if source is passed use that
+    # if neither passed, but $ensure is in symlink form, make a symlink
     case $content {
-             "": { 
+             "": {
                     case $source {
-                             "": { crit("No content or source specified")  }
+                             "": {
+                                     case $ensure {
+                                         "", "absent", "present", "file", "directory": {
+                                                 crit("No content or source specified")
+                                         }
+                                     }
+                                 }
                         default: { File{ source => $source } }
                     }
                  }

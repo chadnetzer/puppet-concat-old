@@ -109,7 +109,7 @@ else
 fi
 
 # find all the files in the fragments directory, sort them numerically and concat to fragments.concat in the working dir
-find fragments/ -type f -print0 | ${SORT} ${SORTARG} | xargs -0 cat >>"fragments.concat"
+find fragments/ -type f -follow -print0 | ${SORT} ${SORTARG} | xargs -0 cat >>"fragments.concat"
 
 if [ x${TEST} = "x" ]; then
 	# This is a real run, copy the file to outfile
