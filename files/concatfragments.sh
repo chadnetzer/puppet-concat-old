@@ -102,10 +102,10 @@ fi
 
 cd ${WORKDIR}
 
-if [ ${WARN} = "true" ]; then
-	echo '# This file is managed by Puppet. DO NOT EDIT.' > "fragments.concat"
-else
+if [ x${WARN} = "x" ]; then
 	cat /dev/null > "fragments.concat"
+else
+	echo '# This file is managed by Puppet. DO NOT EDIT.' > "fragments.concat"
 fi
 
 # find all the files in the fragments directory, sort them numerically and concat to fragments.concat in the working dir
