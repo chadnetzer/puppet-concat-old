@@ -63,13 +63,13 @@ while getopts "o:s:d:tnwf" options; do
 done
 
 # do we have -o?
-if [ x${OUTFILE} = "x" ]; then
+if [ -z ${OUTFILE} ]; then
 	echo "Please specify an output file with -o"
 	exit 1
 fi
 
 # do we have -d?
-if [ x${WORKDIR} = "x" ]; then
+if [ -z ${WORKDIR} ]; then
 	echo "Please fragments directory with -d"
 	exit 1
 fi
@@ -95,7 +95,7 @@ fi
 
 # are there actually any fragments?
 if [ ! "$(ls -A ${WORKDIR}/fragments)" ]; then
-	if [ x${FORCE} = "x" ]; then
+	if [ -z ${FORCE} ]; then
 		echo "The fragments directory is empty, cowardly refusing to make empty config files"
 		exit 1
 	fi
@@ -103,7 +103,7 @@ fi
 
 cd ${WORKDIR}
 
-if [ x${WARN} = "x" ]; then
+if [ -z ${WARN} ]; then
 	cat /dev/null > "fragments.concat"
 else
 	echo '# This file is managed by Puppet. DO NOT EDIT.' > "fragments.concat"
@@ -113,7 +113,7 @@ fi
 # (or optionally numerically) and concat to fragments.concat in the working dir
 find fragments/ -type f -follow -print0 | sort -z ${SORTARG} | xargs -0 cat >>"fragments.concat"
 
-if [ x${TEST} = "x" ]; then
+if [ -z ${TEST} ]; then
 	# This is a real run, copy the file to outfile
 	cp fragments.concat ${OUTFILE}
 	RETVAL=$?
