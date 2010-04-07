@@ -85,15 +85,17 @@ define concat($mode = 0644, $owner = "root", $group = "root", $warn = "false", $
     $fragdir   = "${concatdir}/${safe_name}"
     $concat_name = "fragments.concat.out"
 
-    $warnflag = $warn ? {
-                    true      => "-w",
-                    default     => "",
-                }
+    case $warn {
+        'true',true,yes,on:   { $warnflag = "-w" }
+        'false',false,no,off: { $warnflag = "" }
+        default:              { fail("Improper 'warn' value given to concat: $warn") }
+    }
 
-    $forceflag = $force ? {
-                    true      => "-f",
-                    default     => "",
-                }
+    case $force {
+        'true',true,yes,on:   { $forceflag = "-f" }
+        'false',false,no,off: { $forceflag = "" }
+        default:              { fail("Improper 'force' value given to concat: $force") }
+    }
 
     File{
         owner => $owner,
