@@ -51,8 +51,8 @@ SORTARG=""
 
 while getopts "o:s:d:tnwf" options; do
 	case $options in
-		o ) OUTFILE=$OPTARG;;
-		d ) WORKDIR=$OPTARG;;
+		o ) OUTFILE="$OPTARG";;
+		d ) WORKDIR="$OPTARG";;
 		n ) SORTARG="-n";;
 		w ) WARN="true";;
 		f ) FORCE="true";;
@@ -63,26 +63,27 @@ while getopts "o:s:d:tnwf" options; do
 done
 
 # do we have -o?
-if [ -z ${OUTFILE} ]; then
+if [ -z "${OUTFILE}" ]; then
 	echo "Please specify an output file with -o"
 	exit 1
 fi
 
 # do we have -d?
-if [ -z ${WORKDIR} ]; then
+if [ -z "${WORKDIR}" ]; then
 	echo "Please fragments directory with -d"
 	exit 1
 fi
 
 # can we write to -o?
-if [ -a ${OUTFILE} ]; then
-	if [ ! -w ${OUTFILE} ]; then
+if [ -a "${OUTFILE}" ]; then
+	if [ ! -w "${OUTFILE}" ]; then
 		echo "Cannot write to ${OUTFILE}"
 		exit 1
 	fi
 else
-	if [ ! -w `dirname ${OUTFILE}` ]; then
-		echo "Cannot write to `dirname ${OUTFILE}` to create ${OUTFILE}"
+	OUTFILE_DIR=`dirname "$OUTFILE"`
+	if [ ! -w "${OUTFILE_DIR}" ]; then
+		echo "Cannot write to ${OUTFILE_DIR} to create ${OUTFILE}"
 		exit 1
 	fi
 fi
@@ -94,14 +95,15 @@ if [ ! -d "${WORKDIR}/fragments" ]  && [ ! -x "${WORKDIR}/fragments" ]; then
 fi
 
 # are there actually any fragments?
-if [ ! "$(ls -A ${WORKDIR}/fragments)" ]; then
+FRAGLIST=$(ls -A "${WORKDIR}/fragments")
+if [ ! "$FRAGLIST" ]; then
 	if [ -z ${FORCE} ]; then
 		echo "The fragments directory is empty, cowardly refusing to make empty config files"
 		exit 1
 	fi
 fi
 
-cd ${WORKDIR}
+cd "${WORKDIR}"
 
 if [ -z ${WARN} ]; then
 	cat /dev/null > "fragments.concat"
@@ -115,11 +117,11 @@ find fragments/ -type f -follow -print0 | sort -z ${SORTARG} | xargs -0 cat >>"f
 
 if [ -z ${TEST} ]; then
 	# This is a real run, copy the file to outfile
-	cp fragments.concat ${OUTFILE}
+	cp fragments.concat "${OUTFILE}"
 	RETVAL=$?
 else
 	# Just compare the result to outfile to help the exec decide
-	cmp ${OUTFILE} fragments.concat
+	cmp "${OUTFILE}" fragments.concat
 	RETVAL=$?
 fi
 
