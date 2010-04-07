@@ -1,4 +1,6 @@
 #!/bin/bash
+set -o nounset
+set -o errexit
 
 # Script to concat files to a config file.
 #
@@ -107,8 +109,20 @@ else
 	echo '# This file is managed by Puppet. DO NOT EDIT.' > "fragments.concat"
 fi
 
+# Turn off automatic error exit, as we now wish to deliberately check return codes
+set +o errexit
+set -o pipefail  # Make pipes fail with first bad exit code
+
 # find all the files in the fragments directory, sort them numerically and concat to fragments.concat in the working dir
 find fragments/ -type f -follow -print0 | sort -z ${SORTARG} | xargs -0 cat >>"fragments.concat"
+PIPE_RETVAL=$?
+
+# if the fragment assembly fails, for any reason, exit early (otherwise your
+# previously valid concat target could become a zero length file)
+if [ $PIPE_RETVAL -ne 0 ]; then
+	echo "Error while assembling fragments.  Exiting without updating target..."
+	exit $PIPE_RETVAL
+fi
 
 if [ x${TEST} = "x" ]; then
 	# This is a real run, copy the file to outfile
