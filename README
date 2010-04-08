@@ -27,6 +27,8 @@ CONTRIBUTORS:
 Paul Elliot - Provided 0.24.8 support, shell warnings and empty file 
               creation support.
 David Schmitt - publish and integrate into puppet-modules
+Chad Netzer - Add support for symbolic links to fragments, safer boolean
+              arguments, and fragment assembly error handling.
 
 
 CONTACT:
